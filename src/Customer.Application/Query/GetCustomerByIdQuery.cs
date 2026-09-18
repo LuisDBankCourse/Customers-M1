@@ -2,7 +2,7 @@ using Customer.Application.Common;
 using Customer.Domain.Enums;
 using MediatR;
 
-namespace Customer.Application.Querys;
+namespace Customer.Application.Query;
 
 public record GetCustomerByIdQuery(Guid CustomerId) : IRequest<Result<GetCustomerByIdResponse>>;
 

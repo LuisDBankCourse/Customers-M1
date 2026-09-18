@@ -1,5 +1,5 @@
 using Customer.Application.Commands;
-using Customer.Application.Querys;
+using Customer.Application.Query;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

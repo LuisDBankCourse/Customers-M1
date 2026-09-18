@@ -3,7 +3,7 @@ using Customer.Domain.Repositories;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Customer.Application.Querys;
+namespace Customer.Application.Query;
 
 public class GetCustomerByIdHandler :  IRequestHandler<GetCustomerByIdQuery, Result<GetCustomerByIdResponse>>
 {
