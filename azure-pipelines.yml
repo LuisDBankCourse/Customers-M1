@@ -10,8 +10,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  name: imagetag
-  value: '$(Build.BuildId)'
+  imagetag: '$(Build.BuildId)'
 
 steps:
 - task: DockerCompose@1
@@ -21,6 +20,7 @@ steps:
     azureSubscription: 'Azure subscription 1(6940fc78-e8c0-4d97-96cd-b6b824327fcc)'
     azureContainerRegistry: '{"loginServer":"creditflowacrdvid.azurecr.io", "id" : "/subscriptions/6940fc78-e8c0-4d97-96cd-b6b824327fcc/resourceGroups/CursoDavidCreditFlow/providers/Microsoft.ContainerRegistry/registries/creditflowacrdvid"}'
     dockerComposeFile: '**/docker-compose.yml'
+    projectName: "customerapi"
     action: 'Build services'
     qualifyImageNames: true
 
