@@ -4,13 +4,14 @@
 # https://aka.ms/yaml
 
 trigger:
-- dev
+- main
 
 pool:
   vmImage: ubuntu-latest
 
 variables:
-  imagetag: '$(Build.BuildId)'
+- name: imagetag
+  value: '$(Build.BuildId)'
 
 steps:
 - task: DockerCompose@1
