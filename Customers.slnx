@@ -5,4 +5,5 @@
     <Project Path="src/Customer.Domain/Customer.Domain.csproj" />
     <Project Path="src/Customer.Infrastructure/Customer.Infrastructure.csproj" />
   </Folder>
+  <Project Path="docker-compose.dcproj" />
 </Solution>
