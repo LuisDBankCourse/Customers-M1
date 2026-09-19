@@ -10,7 +10,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-- name: imagetag
+  name: imagetag
   value: '$(Build.BuildId)'
 
 steps:
@@ -18,38 +18,33 @@ steps:
   displayName: "Build Docker Compose"
   inputs:
     containerregistrytype: 'Azure Container Registry'
-    azureSubscription: 'Pay-As-You-Go(e3ce4f58-a3c4-4faa-a2a6-3e2c140c20fb)'
-    azureContainerRegistry: '{"loginServer":"creditflowacr.azurecr.io", "id" : "/subscriptions/e3ce4f58-a3c4-4faa-a2a6-3e2c140c20fb/resourceGroups/TecylabCreditFlow/providers/Microsoft.ContainerRegistry/registries/creditflowacr"}'
+    azureSubscription: 'Azure subscription 1(6940fc78-e8c0-4d97-96cd-b6b824327fcc)'
+    azureContainerRegistry: '{"loginServer":"creditflowacrdvid.azurecr.io", "id" : "/subscriptions/6940fc78-e8c0-4d97-96cd-b6b824327fcc/resourceGroups/CursoDavidCreditFlow/providers/Microsoft.ContainerRegistry/registries/creditflowacrdvid"}'
     dockerComposeFile: '**/docker-compose.yml'
-    projectName: 'creditproductsapi'
+    action: 'Build services'
     qualifyImageNames: true
 
     dockerComposeFileArgs: |
-     DOCKER_REGISTRY=creditflowacr.azurecr.io/
-     
-    action: 'Build services'
-
+      DOCKER_REGISTRY=creditflowacrdvid.azurecr.io/
     additionalImageTags: |
       $(imagetag)
-   
-    includeLatestTag: true
 
+    includeLatestTag: true
 - task: DockerCompose@1
   displayName: "Push Docker Compose to ACR"
   inputs:
     containerregistrytype: 'Azure Container Registry'
-    azureSubscription: 'Pay-As-You-Go(e3ce4f58-a3c4-4faa-a2a6-3e2c140c20fb)'
-    azureContainerRegistry: '{"loginServer":"creditflowacr.azurecr.io", "id" : "/subscriptions/e3ce4f58-a3c4-4faa-a2a6-3e2c140c20fb/resourceGroups/TecylabCreditFlow/providers/Microsoft.ContainerRegistry/registries/creditflowacr"}'
+    azureSubscription: 'Azure subscription 1(6940fc78-e8c0-4d97-96cd-b6b824327fcc)'
+    azureContainerRegistry: '{"loginServer":"creditflowacrdvid.azurecr.io", "id" : "/subscriptions/6940fc78-e8c0-4d97-96cd-b6b824327fcc/resourceGroups/CursoDavidCreditFlow/providers/Microsoft.ContainerRegistry/registries/creditflowacrdvid"}'
     dockerComposeFile: '**/docker-compose.yml'
-    projectName: 'creditproductsapi'
+    projectName: "customerapi"
     action: 'Push services'
 
     qualifyImageNames: true
 
     dockerComposeFileArgs: |
-     DOCKER_REGISTRY=creditflowacr.azurecr.io/
-    
+      DOCKER_REGISTRY=creditflowacrdvid.azurecr.io/
     additionalImageTags: |
       $(imagetag)
-   
+
     includeLatestTag: true
