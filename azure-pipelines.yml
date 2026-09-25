@@ -4,13 +4,15 @@
 # https://aka.ms/yaml
 
 trigger:
-- dev
+- main
 
 pool:
   vmImage: ubuntu-latest
 
 variables:
-  imagetag: '$(Build.BuildId)'
+- group: CUSTOMERAPI
+- name: imagetag
+  value: '$(Build.BuildId)'
 
 steps:
 - task: DockerCompose@1
@@ -20,7 +22,7 @@ steps:
     azureSubscription: 'Azure subscription 1(6940fc78-e8c0-4d97-96cd-b6b824327fcc)'
     azureContainerRegistry: '{"loginServer":"creditflowacrdvid.azurecr.io", "id" : "/subscriptions/6940fc78-e8c0-4d97-96cd-b6b824327fcc/resourceGroups/CursoDavidCreditFlow/providers/Microsoft.ContainerRegistry/registries/creditflowacrdvid"}'
     dockerComposeFile: '**/docker-compose.yml'
-    projectName: "customerapi"
+    projectName: 'customerapi'
     action: 'Build services'
     qualifyImageNames: true
 
@@ -37,7 +39,7 @@ steps:
     azureSubscription: 'Azure subscription 1(6940fc78-e8c0-4d97-96cd-b6b824327fcc)'
     azureContainerRegistry: '{"loginServer":"creditflowacrdvid.azurecr.io", "id" : "/subscriptions/6940fc78-e8c0-4d97-96cd-b6b824327fcc/resourceGroups/CursoDavidCreditFlow/providers/Microsoft.ContainerRegistry/registries/creditflowacrdvid"}'
     dockerComposeFile: '**/docker-compose.yml'
-    projectName: "customerapi"
+    projectName: 'customerapi'
     action: 'Push services'
 
     qualifyImageNames: true
@@ -48,3 +50,29 @@ steps:
       $(imagetag)
 
     includeLatestTag: true
+
+- task: KubernetesManifest@1
+  displayName: 'Create Secret to aks'
+  inputs:
+    action: 'createSecret'
+    connectionType: 'kubernetesServiceConnection'
+    kubernetesServiceConnection: 'aks-creditflow-connection'
+    namespace: 'prod'
+    secretType: 'generic'
+    secretName: 'customerapi-secrets'
+
+    secretArguments: >
+      --from-literal=CustomerConnection="$(CustomerConnection)"
+
+- task: KubernetesManifest@1
+  displayName: 'Deploy to AKS'
+  inputs:
+    action: 'deploy'
+    connectionType: 'kubernetesServiceConnection'
+    kubernetesServiceConnection: 'aks-creditflow-connection'
+    namespace: 'prod'
+    manifests: |
+      $(Build.SourcesDirectory)/k8s/deployment.yml
+      $(Build.SourcesDirectory)/k8s/service.yml
+    containers: 'creditflowacrdvid.azurecr.io/customerapi:$(imagetag)'
+    rolloutStatusTimeout: '300'

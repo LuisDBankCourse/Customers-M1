@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: customerapi
+  namespace: prod
+  labels:
+    app: customerapi
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: customerapi
+
+  template:
+    metadata:
+      labels:
+        app: customerapi
+    spec:
+      containers:
+        - name: customerapi
+          image: 'creditflowacrdvid.azurecr.io/customerapi:latest'
+          ports:
+            - containerPort: 8080
+
+          env:
+            - name: ConnectionStrings__CustomerConnection
+              valueFrom:
+                secretKeyRef:
+                  name: customerapi-secrets
+                  key: CustomerConnection
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
